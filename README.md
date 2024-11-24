@@ -76,4 +76,4 @@ The chatbot is specifically designed for healthcare-related conversations, provi
 
 ---
 
-Stay tuned for updates as we refine and improve this chatbot!
+Stay tuned for updates as I refine and improve this chatbot!
