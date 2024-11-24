@@ -1,0 +1,4 @@
+Django
+django-decouple
+langchain
+langchain_groq
