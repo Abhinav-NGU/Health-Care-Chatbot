@@ -2,78 +2,129 @@
 
 ## Instructions to Set Up and Use
 
-Follow these steps to set up and run the **Health Care Chatbot** on your local machine:
+Follow these steps to set up and run the **Health Care Chatbot** on your local machine using **Ollama**:
+
+---
 
 ### 1. Clone the Repository
+
 You can clone the repository using one of the following methods:
-- Using Git:
+
+* Using Git:
+
   ```bash
   git clone https://github.com/Abhinav-NGU/Health-Care-Chatbot.git
   ```
-- Or download it manually as a ZIP file from the repository page.
+* Or download it manually as a ZIP file from the repository page.
+
+---
 
 ### 2. Install Required Python Modules
-Navigate to the project directory and install all the required Python modules using the `requirements.txt` file. Run the following command:
+
+Navigate to the project directory and install all the required Python modules using the `requirements.txt` file:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Ensure a Stable Internet Connection
-Even though the chatbot runs locally, a stable and reliable internet connection is required for seamless operation.
+---
 
-### 4. Obtain an API Key from GroqCloud
-1. Log in to [GroqCloud](https://console.groq.com).  
-2. Navigate to the **API Keys** section and generate a new API key.  
-3. **Important:** Keep this key secure and do not share it with others to maintain security.  
-4. Copy the API key (a unique hash-like string).
+### 3. Install Ollama (Local LLM)
 
-### 5. Configure the `.env` File
-1. Locate the `.env` file in the project directory.  
-2. Find the following line:
-   ```
-   GROQ_API_KEY = None
-   ```
-3. Replace `None` with your API key. It should look like this:
-   ```
-   GROQ_API_KEY = your_api_key_here
-   ```
+This chatbot runs **fully offline** using a locally hosted LLM via **Ollama**.
+Follow these steps to install Ollama:
 
-### 6. Run the Application
-Once the setup is complete, start the server by running the following command:
+* Visit the official site: [https://ollama.com/](https://ollama.com/)
+* Download and install Ollama according to your operating system.
+* You can also refer to YouTube tutorials for detailed installation steps if needed.
+
+After installing, open your terminal and run:
+
+```bash
+ollama pull gemma3:4b
+ollama run gemma3:4b
+```
+
+Make sure the Ollama server is running at `http://localhost:11434`.
+
+---
+
+### 4. Run the Application
+
+Once Ollama is running, start the Django server:
+
 ```bash
 python manage.py runserver
 ```
 
-### 7. Access the Chatbot
+---
+
+### 5. Access the Chatbot
+
 Open the local link displayed in the terminal (usually `http://127.0.0.1:8000`) in your web browser. You should be directed to the chatbot interface.
 
 ---
 
 ## Model Information
-This chatbot leverages **Llama-3.1-70B-Versatile**, a state-of-the-art large language model (LLM) hosted on GroqCloud. 
 
-### Customizing the Model
-If you wish to use a different model, you can modify the chatbot's configuration:
-1. Open the `llm_manager.py` file in the project directory.
-2. Locate the following code snippet:
-   ```python
-   LLMManager._instance = ChatGroq(
-       temperature=0,
-       groq_api_key=settings.GROQ_API_KEY,
-       model_name="llama-3.1-70b-versatile"
-   )
+This chatbot currently uses the **Gemma 3:4B model via Ollama**.
+
+### 🔄 Changing the Model (Dynamic Setup in Future Updates)
+
+The chatbot is designed to make switching models easy in the future.
+
+If you want to change the model:
+
+1. Pull the new model using Ollama:
+
+   ```bash
+   ollama pull [new_model_name]
    ```
-3. Update the `model_name` parameter with the desired model name from GroqCloud's available options.  
-   For example:
+2. Open the `llm_manager.py` file.
+3. Find the following code:
+
    ```python
-   model_name="new-model-name"
+   class LLMManager:
+       _instance = None
+
+       @staticmethod
+       def get_instance():
+           if LLMManager._instance is None:
+               LLMManager._instance = Ollama(
+                   model="gemma3:4b",  # Use the model you've pulled locally
+                   temperature=0.0,
+                   base_url="http://localhost:11434"  
+               )
+           return LLMManager._instance
    ```
+4. Replace `model="gemma3:4b"` with the name of your newly pulled model.
 
-This allows you to switch to another model that better suits your requirements.
-
-### Use Case
-The chatbot is specifically designed for healthcare-related conversations, providing AI-powered assistance for various health care scenarios. Future updates will continue to enhance its capabilities and focus.
+This process will be made dynamic in future updates to allow model selection from the UI.
 
 ---
 
-Stay tuned for updates as I refine and improve this chatbot!
+## Use Case
+
+The chatbot is specifically designed for **healthcare-related conversations**, providing AI-powered assistance for general health advice, symptom checking, and quick health tips.
+⚙️ Future updates will continue to refine the experience and expand its capabilities.
+
+---
+
+## 🚀 Planned Future Updates
+
+* ✅ **User Login Page:**
+  Personal user accounts to save individual health preferences and improve the user experience.
+
+* ✅ **Temporary Memory:**
+  Store temporary health issues (like short-term diseases or recent symptoms) for better session-based assistance.
+
+* ✅ **Permanent Memory:**
+  Save permanent user information such as allergies, chronic illnesses, and long-term conditions for more personalized care.
+
+* ✅ **Private Chat History:**
+  Chat history will not be shown directly to the user to prioritize a clean and comforting user experience. History management can be added based on future feedback.
+
+---
+
+Stay tuned for more updates as this chatbot continues to evolve!
+Your health, privacy, and comfort remain our top priority.

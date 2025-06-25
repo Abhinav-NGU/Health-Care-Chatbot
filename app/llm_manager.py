@@ -1,5 +1,5 @@
 from django.conf import settings
-from langchain_groq import ChatGroq
+from langchain_community.llms import Ollama
 
 class LLMManager:
     _instance = None
@@ -7,9 +7,9 @@ class LLMManager:
     @staticmethod
     def get_instance():
         if LLMManager._instance is None:
-            LLMManager._instance = ChatGroq(
-                temperature=0,
-                groq_api_key=settings.GROQ_API_KEY,
-                model_name="llama-3.1-70b-versatile"
+            LLMManager._instance = Ollama(
+                model="gemma3:4b",  # Use the model you've pulled locally
+                temperature=0.0,
+                base_url="http://localhost:11434"  
             )
         return LLMManager._instance

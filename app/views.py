@@ -15,16 +15,16 @@ prompt = PromptTemplate.from_template(
     You are an AI health chatbot designed to provide general health information and advice. Focus strictly on medical health topics.
 
     ## Guidelines:
-    - Behave like a nurse first step before meeting doctor.
+    - Behave like a nurse: your job is to help users before they see a doctor.
     - **Prioritize Health:** Provide accurate and useful health information while prioritizing user well-being.
     - **Avoid Medical Diagnosis:** Do not give medical diagnoses. Always recommend consulting a doctor for serious concerns.
     - **General Health Advice:** Provide tips on diet, exercise, stress management, and other general health topics when relevant.
-    - **Symptom Checker:** Ask basic questions about symptoms and suggest potential causes. Always emphasize consulting a doctor for a proper diagnosis and treatment.
+    - **Symptom Checker:** Ask only **essential** and **minimal** questions to understand the issue. Do not overload the user. Stop asking once enough information is collected.
     - **Quick Action for Minor Issues:** If the issue appears minor, offer simple remedies, precautions, or over-the-counter medication advice early in the conversation.
-    - **Accurate Information:** Ensure that your responses are up-to-date and reliable.
-    - **Ask Clarifying Questions:** Ask relevant and concise questions to understand the issue. Don't go too far with the questions, stop once you have enough information to provide helpful advice and also when customer is satisfied.
-    - **Clarity and Conciseness:** Use straightforward language to deliver clear and concise responses.
-    - **Stay Focused:** Do not engage in non-medical discussions or unrelated topics.
+    - **Respect Patient Comfort:** Avoid long or repeated questioning. If the user appears satisfied or the issue is understood, **stop asking** and give helpful advice or escalate to doctor recommendation.
+    - **Accurate Information:** Ensure your responses are up-to-date and reliable.
+    - **Clarity and Conciseness:** Use simple, human-like, and polite language.
+    - **Stay Focused:** Do not engage in non-medical discussions.
     - **Avoid Overpromising:** Do not make guarantees or promises that cannot be fulfilled.
 
     ### User Input: {user_message}
@@ -35,12 +35,10 @@ prompt = PromptTemplate.from_template(
 
 
 def chatbot(request):
-    # Handle GET requests (for page load)
     if request.method == 'GET':
         form = ChatForm()
         return render(request, 'chatbot.html', {'form': form})
 
-    # Handle POST requests (when user submits a message)
     elif request.method == 'POST':
         form = ChatForm(request.POST)
         if form.is_valid():
@@ -49,22 +47,19 @@ def chatbot(request):
             # Format the prompt with the user's message
             prompt_text = prompt.format(user_message=user_message)
             
-            # Use the initialized LLM to get the response with the formatted prompt
-            llm = LLMManager.get_instance()  # Get the initialized LLM
-            bot_response = llm.invoke(prompt_text)  # Call the LLM's invoke method
+            # Get LLM response
+            llm = LLMManager.get_instance()
+            bot_response = llm.invoke(prompt_text)
             
-            # Ensure the response is a string (if it's already a string, no need to decode)
-            bot_response_text = bot_response.content if isinstance(bot_response.content, str) else bot_response.content.decode()
+            # Fix: It's already a string
+            bot_response_text = bot_response
 
-            # Save the chat history to the database
+            # Save to database
             ChatMessage.objects.create(user_message=user_message, bot_response=bot_response_text)
 
-            # Return the response back in the form of JSON
             return JsonResponse({'bot_response': bot_response_text})
 
-    # If the method is neither GET nor POST, return an error
     return JsonResponse({"error": "Invalid request method"}, status=405)
-
 
 # def test_api_key(request):
 #     api_key = config('GROQ_API_KEY', default=None)
