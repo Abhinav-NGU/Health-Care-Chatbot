@@ -1,0 +1,72 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+.DS_Store
+dist
+dist-ssr
+coverage
+*.local
+
+/cypress/videos/
+/cypress/screenshots/
+
+# Python/Django
+*.pyc
+__pycache__/
+db.sqlite3
+.env
+*.env
+*.log
+*.pot
+*.py[cod]
+*.sqlite3
+media/
+staticfiles/
+.DS_Store
+
+# VSCode
+.vscode/
+!.vscode/extensions.json
+
+# Node/Vue.js
+node_modules/
+dist/
+dist-ssr
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+coverage
+*.local
+
+# Cypress (if used)
+cypress/videos/
+cypress/screenshots/
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*.tsbuildinfo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Django migrations (optional, keep if you want to track migrations)
+# **/migrations/
+# !**/migrations/__init__.py
+
+venv/
