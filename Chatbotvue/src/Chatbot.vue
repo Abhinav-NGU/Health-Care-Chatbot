@@ -32,7 +32,8 @@
             <!-- Jumping dots loader for bot typing -->
             <div v-if="botTyping" class="d-flex justify-content-start mb-3">
               <div class="bg-white border border-2 border-success-subtle p-3 rounded-4 align-self-start shadow-sm">
-                <span class="jumping-dots">
+                <span class="jumping-dots d-inline-flex align-items-center" style="font-size: 1.2rem;">
+                  <span class="me-1">🤖</span>
                   <span>. </span><span>. </span><span>. </span>
                 </span>
               </div>
@@ -178,4 +179,8 @@ export default {
   30% { transform: translateY(-8px); }
   60% { transform: translateY(0); }
 }
+.jumping-dots {
+  line-height: 1.2;
+}
+
 </style>
